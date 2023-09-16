@@ -22,15 +22,20 @@ class _HomeState extends State<Home> {
   Future<void> fetchHelloMessage() async {
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:8080/api/v1/demo-controller'),
+        Uri.parse('http://localhost:8080/api/v1/user/profile'),
         headers: {
           'Authorization': 'Bearer ${widget.accessToken}',
         },
       );
       if (response.statusCode == 200) {
-        final data = await response.body;
+        final data = jsonDecode(response.body);
+        final userData = data['username']; // Извлекаем данные из поля "username"
+        final firstname = userData['firstname'];
+        final lastname = userData['lastname'];
+        final email = userData['email'];
+
         setState(() {
-          helloMessage = data;
+          helloMessage = 'Имя: $firstname\nФамилия: $lastname\nEmail: $email';
         });
       } else if (response.statusCode == 403) {
         // Обработка ошибок аутентификации

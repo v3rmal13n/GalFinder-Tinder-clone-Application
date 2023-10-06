@@ -1,0 +1,6 @@
+{
+  "title": "My App",
+  "registration": "Registration",
+  "login": "Login",
+  "unknownRoute": "404 - Page not found"
+}

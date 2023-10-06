@@ -1,0 +1,7 @@
+// intl_ru.arb
+{
+  "title": "Мое приложение",
+  "registration": "Регистрация",
+  "login": "Вход",
+  "unknownRoute": "404 - Страница не найдена"
+}

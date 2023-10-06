@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:galfinder/screens/auth/home.dart'; // Импорт вашего Home.dart
+import 'package:galfinder/screens/auth/home.dart'; // Import your Home.dart
 
 class Login extends StatefulWidget {
   @override
@@ -55,12 +55,12 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         title: Text(
           'Войти',
-          style: TextStyle(color: Colors.white), // белый цвет текста шапки
+          style: TextStyle(color: Colors.blue), // Blue text color for the app bar
         ),
-        backgroundColor: Colors.black, // черный фон шапки
+        backgroundColor: Colors.white, // White app bar background
       ),
       body: Container(
-        color: Colors.grey[800], // серый фон
+        color: Colors.blue, // Blue background
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -73,22 +73,22 @@ class _LoginState extends State<Login> {
                     errorMessage,
                     style: TextStyle(color: Colors.red),
                   ),
-                SizedBox(height: 8), // Уменьшаем высоту поля
+                SizedBox(height: 8),
                 TextField(
                   controller: emailController,
-                  style: TextStyle(color: Colors.white), // белый текст
+                  style: TextStyle(color: Colors.white), // White text color
                   decoration: InputDecoration(
                     labelText: 'Email:',
-                    labelStyle: TextStyle(color: Colors.white), // белая метка
+                    labelStyle: TextStyle(color: Colors.white),
                   ),
                 ),
-                SizedBox(height: 8), // Уменьшаем высоту поля
+                SizedBox(height: 8),
                 TextField(
                   controller: passwordController,
-                  style: TextStyle(color: Colors.white), // белый текст
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Пароль:',
-                    labelStyle: TextStyle(color: Colors.white), // белая метка
+                    labelStyle: TextStyle(color: Colors.white),
                   ),
                   obscureText: true,
                 ),
@@ -97,16 +97,16 @@ class _LoginState extends State<Login> {
                   onPressed: handleSubmit,
                   child: Text(
                     'Войти',
-                    style: TextStyle(color: Colors.white), // белый текст кнопки
+                    style: TextStyle(color: Colors.blue),
                   ),
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.black), // черный цвет кнопки
+                    backgroundColor: MaterialStateProperty.all(Colors.white), // Blue button color
                   ),
                 ),
-                SizedBox(height: 8), // Расстояние между кнопкой "Войти" и кнопкой "Зарегистрироваться"
+                SizedBox(height: 8),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/'); // Перенаправление на главную страницу
+                    Navigator.pushNamed(context, '/'); // Redirect to the main page
                   },
                   child: Text(
                     'У вас нет аккаунта? Создать',

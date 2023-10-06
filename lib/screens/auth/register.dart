@@ -40,13 +40,13 @@ class _RegistrationFormState extends State<RegistrationForm> {
     );
 
     if (response.statusCode == 200) {
-      // Регистрация успешна
-      print('Регистрация успешна');
+      // Registration successful
+      print('Registration successful');
 
-      // Перенаправляем на страницу входа (страницу с логином)
+      // Redirect to the login page
       Navigator.of(context).pushReplacementNamed('/login');
     } else {
-      // Обработка ошибок при регистрации
+      // Handle registration errors
       if (response.statusCode == 403) {
         setState(() {
           errorMessage = 'Такого аккаунта нет';
@@ -65,12 +65,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
       appBar: AppBar(
         title: Text(
           'Зарегистрироваться',
-          style: TextStyle(color: Colors.white), // белый цвет текста шапки
+          style: TextStyle(color: Colors.blue), // Blue text color for the app bar
         ),
-        backgroundColor: Colors.black, // черный фон шапки
+        backgroundColor: Colors.white, // White app bar background
       ),
       body: Container(
-        color: Colors.grey[800], // серый фон
+        color: Colors.blue, // Blue background
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -85,42 +85,42 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   ),
                 TextField(
                   controller: firstnameController,
-                  style: TextStyle(color: Colors.white), // белый текст
+                  style: TextStyle(color: Colors.white), // White text color
                   decoration: InputDecoration(
                     labelText: 'Имя',
-                    labelStyle: TextStyle(color: Colors.white), // белая метка
+                    labelStyle: TextStyle(color: Colors.white),
                   ),
                 ),
                 TextField(
                   controller: lastnameController,
-                  style: TextStyle(color: Colors.white), // белый текст
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Фамилия',
-                    labelStyle: TextStyle(color: Colors.white), // белая метка
+                    labelStyle: TextStyle(color: Colors.white),
                   ),
                 ),
                 TextField(
                   controller: emailController,
-                  style: TextStyle(color: Colors.white), // белый текст
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Email',
-                    labelStyle: TextStyle(color: Colors.white), // белая метка
+                    labelStyle: TextStyle(color: Colors.white),
                   ),
                 ),
                 TextField(
                   controller: usernameController,
-                  style: TextStyle(color: Colors.white), // белый текст
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Имя пользователя',
-                    labelStyle: TextStyle(color: Colors.white), // белая метка
+                    labelStyle: TextStyle(color: Colors.white),
                   ),
                 ),
                 TextField(
                   controller: passwordController,
-                  style: TextStyle(color: Colors.white), // белый текст
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Пароль',
-                    labelStyle: TextStyle(color: Colors.white), // белая метка
+                    labelStyle: TextStyle(color: Colors.white),
                   ),
                   obscureText: true,
                 ),
@@ -129,24 +129,24 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   onPressed: handleSubmit,
                   child: Text(
                     'Зарегистрироваться',
-                    style: TextStyle(color: Colors.white), // белый текст кнопки
+                    style: TextStyle(color: Colors.blue),
                   ),
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.black), // черный цвет кнопки
+                    backgroundColor: MaterialStateProperty.all(Colors.white), // Blue button color
                   ),
                 ),
                 SizedBox(height: 16),
-                if (errorMessage.isEmpty) // Отображать только если errorMessage пусто
+                if (errorMessage.isEmpty)
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pushNamed('/login');
                     },
                     child: Text(
                       'Уже есть аккаунт? Войти',
-                      style: TextStyle(color: Colors.white), // белый текст кнопки
+                      style: TextStyle(color: Colors.blue),
                     ),
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.black), // черный цвет кнопки
+                      backgroundColor: MaterialStateProperty.all(Colors.white), // Blue button color
                     ),
                   ),
               ],

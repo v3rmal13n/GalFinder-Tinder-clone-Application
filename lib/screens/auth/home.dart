@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -20,8 +21,10 @@ class _HomeState extends State<Home> {
   bool isFemaleSelected = false;
 
   File? _userImageFile;
+  Uint8List _userImageBytes = Uint8List(0);
 
   final ImagePicker _picker = ImagePicker();
+  String _photoUrl = 'http://localhost:8080/api/v1/user/profile/photo';
 
   @override
   void initState() {
@@ -60,32 +63,25 @@ class _HomeState extends State<Home> {
   Future<void> fetchUserPhoto() async {
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:8080/api/v1/user/profile/getPhoto'),
+        Uri.parse('$_photoUrl?timestamp=${DateTime.now().millisecondsSinceEpoch}'),
         headers: {
           'Authorization': 'Bearer ${widget.accessToken}',
         },
       );
 
       if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body);
-
-        if (jsonResponse['photo'] != null) {
-          final photoBase64 = jsonResponse['photo'];
-          final photoBytes = base64.decode(photoBase64);
-          setState(() {
-            _userImageFile = File.fromRawPath(photoBytes);
-          });
-        }
+        final Uint8List photoBytes = response.bodyBytes;
+        setState(() {
+          _userImageBytes = photoBytes;
+        });
       } else {
         print(response.statusCode);
-        print(response.body);
+        // обработайте другие коды состояния по вашему усмотрению
       }
     } catch (error) {
       print("Ошибка: $error");
     }
   }
-
-
 
   Future<void> updateGender(String gender) async {
     final genderData = {'gender': gender};
@@ -123,7 +119,7 @@ class _HomeState extends State<Home> {
       return;
     }
 
-    final uri = Uri.parse('http://localhost:8080/api/v1/user/profile/photo');
+    final uri = Uri.parse('$_photoUrl?timestamp=${DateTime.now().millisecondsSinceEpoch}');
     final request = http.MultipartRequest('PUT', uri)
       ..headers['Authorization'] = 'Bearer ${widget.accessToken}';
     final file = await http.MultipartFile.fromPath('file', _userImageFile!.path);
@@ -133,6 +129,15 @@ class _HomeState extends State<Home> {
       final response = await request.send();
       if (response.statusCode == 200) {
         print('Фотография успешно загружена');
+        // Обновите _userImageBytes и перестройте виджет
+        final newResponse = await http.get(Uri.parse('$_photoUrl?timestamp=${DateTime.now().millisecondsSinceEpoch}'),
+            headers: {'Authorization': 'Bearer ${widget.accessToken}'});
+        if (newResponse.statusCode == 200) {
+          final Uint8List newPhotoBytes = newResponse.bodyBytes;
+          setState(() {
+            _userImageBytes = newPhotoBytes;
+          });
+        }
       } else {
         print('Ошибка при загрузке фотографии: ${response.statusCode}');
       }
@@ -221,15 +226,17 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          if (_userImageFile != null)
+          if (_userImageBytes.isNotEmpty)
             Positioned(
               top: 10,
               right: 10,
-              child: Image.file(
-                _userImageFile!,
+              child: Container(
                 width: 400,
                 height: 400,
-                fit: BoxFit.cover,
+                child: Image.memory(
+                  _userImageBytes,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
         ],

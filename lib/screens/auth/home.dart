@@ -15,6 +15,10 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String helloMessage = '';
+
+  TextEditingController _telegramController = TextEditingController();
+  TextEditingController _ageController = TextEditingController();
+
   String selectedGender = '';
 
   bool isMaleSelected = false;
@@ -46,9 +50,12 @@ class _HomeState extends State<Home> {
         final firstname = data['firstname'];
         final lastname = data['lastname'];
         final email = data['email'];
+        final telegram = data['telegram'];
+        final gender = data['gender'];
+        final age = data['age'];
 
         setState(() {
-          helloMessage = 'Имя: $firstname\nФамилия: $lastname\nEmail: $email';
+          helloMessage = 'Имя: $firstname\nФамилия: $lastname\nEmail: $email\nТелеграм: $telegram\nПол: $gender\nВозраст: $age';
         });
       } else if (response.statusCode == 403) {
         // Обработка ошибок аутентификации
@@ -59,6 +66,59 @@ class _HomeState extends State<Home> {
       // Обработка ошибок
     }
   }
+
+  Future<void> updateAge(int age) async {
+    final ageData = {'age' : age};
+
+    try {
+      final response = await http.put(
+        Uri.parse('http://localhost:8080/api/v1/user/profile/age'),
+        headers: {
+          'Authorization': 'Bearer ${widget.accessToken}',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(ageData),
+      );
+      if (response.statusCode == 200) {
+        print('Возраст успешно обновлен: $age');
+
+        await fetchHelloMessage();
+      } else {
+        print('Ошибка при обновлении возраста: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Ошибка при обновлении возраста: $error');
+    }
+
+  }
+
+  Future<void> updateTelegram(String telegramLink) async {
+    final telegramData = {'telegram': telegramLink};
+
+    try {
+      final response = await http.put(
+        Uri.parse('http://localhost:8080/api/v1/user/profile/telegram'),
+        headers: {
+          'Authorization': 'Bearer ${widget.accessToken}',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(telegramData),
+      );
+      if (response.statusCode == 200) {
+        print('Телеграм успешно обновлен: $telegramLink');
+
+        // Вызовите fetchHelloMessage() для обновления данных пользователя.
+        await fetchHelloMessage();
+      } else {
+        print('Ошибка при обновлении Телеграма: ${response.statusCode}');
+        // Здесь вы можете добавить логику для обработки ошибки при обновлении Телеграма.
+      }
+    } catch (error) {
+      print('Ошибка при обновлении Телеграма: $error');
+      // Здесь вы можете добавить логику для обработки других ошибок.
+    }
+  }
+
 
   Future<void> fetchUserPhoto() async {
     try {
@@ -97,6 +157,7 @@ class _HomeState extends State<Home> {
       );
       if (response.statusCode == 200) {
         print('Пол успешно обновлен: $gender');
+        await fetchHelloMessage();
         setState(() {
           if (gender == 'male') {
             isMaleSelected = true;
@@ -209,6 +270,58 @@ class _HomeState extends State<Home> {
                     ),
                   ],
                 ),
+
+                    Container(
+                      constraints: BoxConstraints(maxWidth: 300), // Установите желаемую максимальную ширину.
+                      child: TextField(
+                        controller: _ageController,
+                        onChanged: (age) {
+
+                        },
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                          labelText: 'Укажите возраст',
+                        ),
+                      ),
+                    ),
+                    Container(
+                      constraints: BoxConstraints(maxWidth: 700), // Установите желаемую максимальную ширину.
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Здесь отправляем запрос на обновление Телеграма.
+                          updateAge(int.parse(_ageController.text));
+                        },
+                        child: Text('Обновить Возраст'),
+                      ),
+                    ),
+
+
+
+                Container(
+                      constraints: BoxConstraints(maxWidth: 300), // Установите желаемую максимальную ширину.
+                      child: TextField(
+                        controller: _telegramController,
+                        onChanged: (telegramLink) {
+                          // Здесь можно обновлять состояние для хранения ссылки на Телеграм.
+                        },
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                          labelText: 'Ссылка на Телеграм(t.me/my_nickname)',
+                        ),
+                      ),
+                    ),
+                    Container(
+                      constraints: BoxConstraints(maxWidth: 700), // Установите желаемую максимальную ширину.
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Здесь отправляем запрос на обновление Телеграма.
+                          updateTelegram(_telegramController.text);
+                        },
+                        child: Text('Обновить Телеграм'),
+                      ),
+                    ),
+
+
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
